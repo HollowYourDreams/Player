@@ -9,32 +9,65 @@ namespace Player
 {
     class Program
     {
-        public static string ToString(int[] args)
-        {
-            var result = "";
-            for (var i = 0; i < args.Length; i++)
-            {
-                if (i == 0)
-                { 
-                    result = args[i].ToString();
-                    continue;
-                }
-
-                result =  $"{result} {args[i]}";
-            }
-            return result;
-        }
+        private static char[] _alpha;
+        public static char[] Alpha { get; set; }
+        //public static int A {get;set;}- объявление
+        //int a   - объявление
+        //a = 0; - присвоение
+        //int a = 0; - присвоение с объявлением
+        //var a = 0; - аналогично выше
+        //public static int A {get;set;} = 0; - присвоение с объявлением значения по-умолчанию
+        // new char[] - инициализация (ищем по слову new)
 
         static void Main(string[] args)
         {
-            var something = new int[5]{10,20,30,40,50};
-            var s = ToString(something);//+7 8 7
-            var text = "Привет, чертов мир!";
-            //string.StartsWith  - ПРОВЕРКА!!! Что строка начинается с указанных символом
-            var index = text.IndexOf("чертов");
-            var length = "чертов".Length;
-            Console.WriteLine($"{text.Substring(0, index-1)}{text.Substring(index+length)}");
-            Console.WriteLine(s);
+            var t = new int[2,2] {{00,01}, {10,11} };
+            var dict = new Dictionary<int, string>
+            {
+                {
+                    1,
+                    "Никита"
+                },
+                {
+                    2,
+                    "Степа"
+                },
+                {
+                    3,
+                    "Настя"
+                }
+            };
+            try
+            {
+                throw new KeyNotFoundException("VSEM KIRDIK");
+                dict.Add(3, "sdsdd");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Console.WriteLine("dfgsdg");
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine("PRIVED");
+            }
+            catch (NullReferenceException ex)
+            {
+                Console.WriteLine("dfgsdg");
+            }
+            catch (AggregateException ex)
+            {
+                Console.WriteLine("dfgsdg");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("dfgsdg");
+            }
+            dict.Values.ToList().ForEach(Console.WriteLine);
+            Console.WriteLine();
             Console.ReadKey();
         }
     }
