@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+using Player.Extensions;
 using Player.Models;
 
 namespace Player
@@ -10,31 +8,27 @@ namespace Player
     {
         static void Main(string[] args)
         {
-            var calc = new Calc();
-            Console.WriteLine("Введите числа для суммирования или \"end\" для выхода из программы");
-            var isStopped = false;
-            var numbers = new List<int>();
-            while (!isStopped)
+            var user1 = new User
             {
-                var text = Console.ReadLine();
-                if (string.IsNullOrWhiteSpace(text) || text.ToLower() == "END".ToLower())
-                {
-                    break;
-                }
-                if (int.TryParse(text, out var res))
-                {
-                    numbers.Add(res);
-                }
-                else
-                {
-                    Console.WriteLine("Вы ввели недопустимое значение!");
-                    Console.WriteLine("Введите число или \"end\" ");
-                }
-            }
+                Id = 0,
+                NickName = "Hollow",
+                Password = "Passwordwsyugdhfjaskdgjasd",
+                Role = "Role1",
+                DateBirth = new DateTime(1999, 06, 16),
+                IsDeleted = false
+            };
+            var user2 = new User
+            {
+                Id = 3,
+                NickName = "Hollow",
+                Password = "asdfasdfasd",
+                Role = "Role2",
+                DateBirth = new DateTime(1999, 06, 16),
+                IsDeleted = true
+            };
 
-            var sum = calc.Sum(new List<int>{1,2});
-            Console.WriteLine(sum);
-
+            Console.WriteLine(user1.IsEqual(user2));
+            Console.WriteLine(user1.ToString());
             Console.ReadKey();
         }
     }
