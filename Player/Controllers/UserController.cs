@@ -142,7 +142,7 @@ namespace Player.Controllers
                 var passwordIndexEnd = text.Substring(passwordIndexStart).IndexOf(';');
 
                 var idString = text.Substring(idIndexStart + 3 + 1, idIndexEnd - 3 - 1);
-                var nameString = text.Substring(nameIndexStart + 9 + 1, nameIndexEnd -9 - 1);
+                var nameString = text.Substring(nameIndexStart + 9 + 1, nameIndexEnd - 9 - 1);
                 var dateBirthString = text.Substring(dateBirthIndexStart + 10 + 1, dateBirthIndexEnd - 10 - 1);
                 var roleString = text.Substring(roleIndexStart + 5 + 1, roleIndexEnd - 5 - 1);
                 var isDeletedString = text.Substring(isDeletedIndexStart + 10 + 1, isDeletedIndexEnd - 10 - 1);
