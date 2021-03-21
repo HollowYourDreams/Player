@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Player.Enums;
 using Player.Interface;
 using Player.Models;
 
@@ -58,7 +60,7 @@ namespace Player.Controllers
                     Id = CurrentLastId + 1,
                     NickName = nick,
                     Password = pass,
-                    Role = "Common",
+                    Role = Roles.Player,
                     DateBirth = birth,
                     IsDeleted = false
                 };
@@ -75,7 +77,7 @@ namespace Player.Controllers
                 Id = CurrentLastId+1,
                 NickName = nick,
                 Password = pass,
-                Role = "Common",
+                Role = Roles.Player,
                 DateBirth = birth,
                 IsDeleted = false
             };
@@ -90,12 +92,8 @@ namespace Player.Controllers
                 using var stream = new FileStream($"{PathToUsers}\\{fileName}", FileMode.CreateNew);
                 using var writer = new StreamWriter(stream, Encoding.Unicode);
 
-                writer.WriteLine($"Id: {user.Id}");
-                writer.WriteLine($"NickName: {user.NickName}");
-                writer.WriteLine($"DateBirth: {user.DateBirth}");
-                writer.WriteLine($"Password: {user.Password}");
-                writer.WriteLine($"Role: {user.Role}");
-                writer.WriteLine($"IsDeleted: {user.IsDeleted}");
+                var json = JsonConvert.SerializeObject(user);
+                writer.Write(json);
 
                 return true;
             }
@@ -140,7 +138,7 @@ namespace Player.Controllers
                Directory.Delete(PathToUsers, true);
                return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
@@ -195,13 +193,8 @@ namespace Player.Controllers
             using var stream = new FileStream(currentUser, FileMode.Open);
             using var writer = new StreamWriter(stream, Encoding.Unicode);
 
-            writer.WriteLine($"Id: {user.Id}");
-            writer.WriteLine($"NickName: {user.NickName}");
-            writer.WriteLine($"DateBirth: {user.DateBirth}");
-            writer.WriteLine($"Password: {user.Password}");
-            writer.WriteLine($"Role: {user.Role}");
-            writer.WriteLine($"IsDeleted: {user.IsDeleted}");
-
+            var json = JsonConvert.SerializeObject(user);
+            writer.Write(json);
             return user;
         }
 
@@ -224,57 +217,7 @@ namespace Player.Controllers
 
         private static User ParseStringToUser(string text)
         {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                return null;
-
-            }
-            var idIndexStart = text.IndexOf("Id:", StringComparison.CurrentCultureIgnoreCase);
-            var nameIndexStart = text.IndexOf("Nickname:", StringComparison.CurrentCultureIgnoreCase);
-            var dateBirthIndexStart = text.IndexOf("DateBirth:", StringComparison.CurrentCultureIgnoreCase);
-            var roleIndexStart = text.IndexOf("Role:", StringComparison.CurrentCultureIgnoreCase);
-            var isDeletedIndexStart = text.IndexOf("IsDeleted:", StringComparison.CurrentCultureIgnoreCase);
-            var passwordIndexStart = text.IndexOf("Password:", StringComparison.CurrentCultureIgnoreCase);
-
-            var idIndexEnd = text.Substring(idIndexStart).IndexOf(';');
-            var nameIndexEnd = text.Substring(nameIndexStart).IndexOf(';');
-            var dateBirthIndexEnd = text.Substring(dateBirthIndexStart).IndexOf(';');
-            var roleIndexEnd = text.Substring(roleIndexStart).IndexOf(';');
-            var isDeletedIndexEnd = text.Substring(isDeletedIndexStart).IndexOf(';');
-            var passwordIndexEnd = text.Substring(passwordIndexStart).IndexOf(';');
-
-            var idString = text.Substring(idIndexStart + 3 + 1, idIndexEnd - 3 - 1);
-            var nameString = text.Substring(nameIndexStart + 9 + 1, nameIndexEnd - 9 - 1);
-            var dateBirthString = text.Substring(dateBirthIndexStart + 10 + 1, dateBirthIndexEnd - 10 - 1);
-            var roleString = text.Substring(roleIndexStart + 5 + 1, roleIndexEnd - 5 - 1);
-            var isDeletedString = text.Substring(isDeletedIndexStart + 10 + 1, isDeletedIndexEnd - 10 - 1);
-            var passwordString = text.Substring(passwordIndexStart + 9 + 1, passwordIndexEnd - 9 - 1);
-
-            if (!int.TryParse(idString, out var id))
-            {
-                throw new Exception("Не удалось прочитать ID!");
-            }
-
-            DateTime? dateBirth = null;
-            if (DateTime.TryParse(dateBirthString, out var dateBirthRes))
-            {
-                dateBirth = dateBirthRes;
-            }
-
-            if (!bool.TryParse(isDeletedString, out var isDeleted))
-            {
-                throw new Exception("Не удалось прочитать IsDeleted!");
-            }
-
-            return  new User
-            {
-                Id = id,
-                NickName = nameString,
-                DateBirth = dateBirth,
-                Password = passwordString,
-                Role = roleString,
-                IsDeleted = isDeleted
-            };
+            return string.IsNullOrWhiteSpace(text) ? null : JsonConvert.DeserializeObject<User>(text);
         }
 
     }
